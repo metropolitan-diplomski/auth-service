@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping()
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;

@@ -1,5 +1,7 @@
 server:
   port: 3001
+  servlet:
+    context-path: /auth
 
 spring:
   application:
@@ -22,7 +24,3 @@ jwt:
   secret: s3cr3t
   header: Authorization
   expiration: 3600
-  route:
-    authentication:
-      path: login
-      refresh: refresh

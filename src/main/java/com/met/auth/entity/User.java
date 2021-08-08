@@ -24,7 +24,7 @@ public class User {
     private String password;
     @Column(name = "full_name")
     private String fullName;
-    @Column(name = "create_date")
+    @Column(name = "create_data")
     @CreationTimestamp
     private LocalDateTime createdDate;
     @Column(name = "modified_date")

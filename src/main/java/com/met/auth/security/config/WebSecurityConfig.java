@@ -69,14 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                //allow anonymous auth requests
-                .antMatchers("/v1/user/email/**").hasAnyRole("ADMIN", "OPERATOR")
-                .antMatchers("/v1/user/**").hasRole("ADMIN")
-                .antMatchers("/v1/admin/**").hasRole("ADMIN")
-                .antMatchers("/v1/set-password").hasRole("GENERATED_PASSWORD")
-                .antMatchers("/v1/login/**").permitAll()
-                .antMatchers("/v1/profile/**").hasAnyRole("ADMIN", "OPERATOR")
-                .antMatchers("/v1/password-reset/**").permitAll()
+                //allow anonymous auth requests)
+                .antMatchers("/login").permitAll()
 
                 //authenticated requests
                 .anyRequest().authenticated();
