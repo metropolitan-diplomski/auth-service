@@ -17,6 +17,8 @@ public class UserResponse {
     private String username;
     private String email;
     private String fullName;
+    private String address;
+    private String jmbg;
     @JsonFormat(
             pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
     )

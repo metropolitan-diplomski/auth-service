@@ -16,6 +16,8 @@ public class UserMapper {
         userResponse.setEmail(user.getEmail());
         userResponse.setCreatedDate(user.getCreatedDate());
         userResponse.setFullName(user.getFullName());
+        userResponse.setAddress(user.getAddress());
+        userResponse.setJmbg(user.getJmbg());
         userResponse.setRoles(user.getRoles().stream().map(Role::getRole).collect(Collectors.toList()));
 
         return userResponse;
@@ -26,6 +28,8 @@ public class UserMapper {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
+        user.setAddress(request.getAddress());
+        user.setJmbg(request.getJmbg());
 
         return user;
     }

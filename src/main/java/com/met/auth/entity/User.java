@@ -22,6 +22,8 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private String address;
+    private String jmbg;
     @Column(name = "full_name")
     private String fullName;
     @Column(name = "create_data")

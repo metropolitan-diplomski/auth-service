@@ -1,6 +1,7 @@
 package com.met.auth.service.impl;
 
 import com.met.auth.dto.mapper.UserMapper;
+import com.met.auth.dto.request.UpdateClientRequest;
 import com.met.auth.dto.request.UserCreateRequest;
 import com.met.auth.dto.response.UserResponse;
 import com.met.auth.entity.Role;
@@ -18,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,25 +36,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(UserMapper::entityToResponse)
-                .collect(Collectors.toList());
+    public List<UserResponse> getAllUsers(boolean clients) {
+        List<UserResponse> allUsers = userRepository.findAll()
+                .stream().map(UserMapper::entityToResponse).collect(Collectors.toList());
+        List<UserResponse> responses = new ArrayList<>();
+        for (UserResponse user : allUsers) {
+            if (clients) {
+                if (user.getRoles().contains("ROLE_USER")) {
+                    responses.add(user);
+                }
+            } else {
+                if (user.getRoles().contains("ROLE_ADMIN")) {
+                    responses.add(user);
+                }
+            }
+        }
+
+        return responses;
     }
 
     @Override
     @Transactional
-    public UserResponse createUser(UserCreateRequest request) throws AuthServiceException {
+    public UserResponse createUser(UserCreateRequest request, boolean clients) throws AuthServiceException {
         User user = UserMapper.createRequestToEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        List<String> requestRoles = request.getRoles();
         Set<Role> roles = new HashSet<>();
-        for (String role : requestRoles) {
-            Role r = roleRepository
-                    .findByRoleIgnoreCase(role)
-                    .orElseThrow(() -> new AuthServiceException(ErrorCode.NOT_FOUND, "Role not found"));
-            roles.add(r);
+        if (clients) {
+            Role userRole = roleRepository.findByRoleIgnoreCase("ROLE_USER").get();
+            roles.add(userRole);
+        } else {
+
+            Role userRole = roleRepository.findByRoleIgnoreCase("ROLE_ADMIN").get();
+            roles.add(userRole);
         }
         user.setRoles(roles);
         user = userRepository.saveAndFlush(user);
@@ -89,5 +100,34 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AuthServiceException(ErrorCode.NOT_FOUND, "User with that id not found."));
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public UserResponse updateClient(String id, UpdateClientRequest request) {
+        User user = userRepository
+                .findById(UUID.fromString(id))
+                .orElseThrow(() -> new AuthServiceException(ErrorCode.NOT_FOUND, "User with that id not found."));
+        validateClient(user.getRoles());
+
+        user.setFullName(request.getFullName());
+        user.setAddress(request.getAddress());
+        user.setEmail(request.getEmail());
+
+        User updated = userRepository.save(user);
+
+        return UserMapper.entityToResponse(updated);
+    }
+
+    void validateClient(Set<Role> roles) {
+        boolean isClient = false;
+        for (Role role : roles) {
+            if (role.getRole().equals("ROLE_USER")) {
+                isClient = true;
+            }
+        }
+
+        if (!isClient) {
+            throw new AuthServiceException(ErrorCode.OPERATION_NOT_ALLOWED, "Editing non client users is not allowed");
+        }
     }
 }
