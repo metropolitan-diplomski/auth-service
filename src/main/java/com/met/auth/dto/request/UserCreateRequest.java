@@ -20,11 +20,7 @@ public class UserCreateRequest {
     @NotNull
     @NotBlank(message = "Name cannot be blank!")
     private String fullName;
-    @NotNull
-    @NotBlank(message = "Name cannot be blank!")
     private String address;
-    @NotNull
-    @NotBlank(message = "Name cannot be blank!")
     private String jmbg;
     @NotNull
     @NotBlank(message = "Password cannot be blank!")
