@@ -76,6 +76,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getById(String id) throws AuthServiceException {
+        User user = userRepository
+                .findById(UUID.fromString(id))
+                .orElseThrow(() -> new AuthServiceException(ErrorCode.NOT_FOUND, "User with that id not found."));
+        return UserMapper.entityToResponse(user);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public UserResponse getProfile() {
         User user = securityUtil.getLoggedDbUser();

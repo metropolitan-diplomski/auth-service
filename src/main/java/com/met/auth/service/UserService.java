@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserService {
     List<UserResponse> getAllUsers(boolean clients);
     UserResponse createUser(UserCreateRequest request, boolean clients) throws AuthServiceException;
+    UserResponse getById(String id) throws AuthServiceException;
     UserResponse getProfile();
     UserResponse findUserByEmail(String email) throws AuthServiceException;
     void deleteUser(String id) throws AuthServiceException;

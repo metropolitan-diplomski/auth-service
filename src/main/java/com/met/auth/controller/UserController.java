@@ -27,6 +27,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers(clients));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable(name = "id") String id) {
+        return ResponseEntity.ok(userService.getById(id));
+    }
+
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestParam(name = "clients") boolean clients, @Valid @RequestBody UserCreateRequest request) throws AuthServiceException {
         return ResponseEntity.ok(userService.createUser(request, clients));
