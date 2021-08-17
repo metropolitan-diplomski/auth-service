@@ -1,0 +1,26 @@
+server:
+  port: 3001
+  servlet:
+    context-path: /auth
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: ${DB_UPSTREAM}/auth
+    username: postgres
+    password:
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eurekaUser:eurekaPass@discovery-service:3007/eureka/
+
+jwt:
+  secret: s3cr3t
+  header: Authorization
+  expiration: 3600
