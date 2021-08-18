@@ -58,7 +58,7 @@ public class AuthController {
             roles.add(authority.getAuthority());
         }
 
-        return ResponseEntity.ok(new JwtResponse(token, dateFormat.format(expiration), userDetails.getUsername(), roles));
+        return ResponseEntity.ok(new JwtResponse(token, dateFormat.format(expiration), userDetails.getUsername(), roles, userDetails.getDbUser().getId().toString()));
 
     }
 
