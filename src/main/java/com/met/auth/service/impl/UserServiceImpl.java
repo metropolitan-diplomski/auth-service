@@ -1,6 +1,7 @@
 package com.met.auth.service.impl;
 
 import com.met.auth.dto.mapper.UserMapper;
+import com.met.auth.dto.request.ChangePasswordRequest;
 import com.met.auth.dto.request.UpdateClientRequest;
 import com.met.auth.dto.request.UserCreateRequest;
 import com.met.auth.dto.response.UserResponse;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private SecurityUtil securityUtil;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -124,6 +126,21 @@ public class UserServiceImpl implements UserService {
         User updated = userRepository.save(user);
 
         return UserMapper.entityToResponse(updated);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequest request) {
+        UUID id = securityUtil.getLoggedDbUser().getId();
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new AuthServiceException(ErrorCode.NOT_FOUND, "User not found")
+        );
+
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+        } else {
+            throw new AuthServiceException(ErrorCode.PASSWORD_NOT_MATCH, "Current password is not correct");
+        }
     }
 
     void validateClient(Set<Role> roles) {

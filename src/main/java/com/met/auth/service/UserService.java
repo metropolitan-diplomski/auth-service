@@ -1,5 +1,6 @@
 package com.met.auth.service;
 
+import com.met.auth.dto.request.ChangePasswordRequest;
 import com.met.auth.dto.request.UpdateClientRequest;
 import com.met.auth.dto.request.UserCreateRequest;
 import com.met.auth.dto.response.UserResponse;
@@ -16,4 +17,5 @@ public interface UserService {
     UserResponse findUserByEmail(String email) throws AuthServiceException;
     void deleteUser(String id) throws AuthServiceException;
     UserResponse updateClient(String id, UpdateClientRequest request);
+    void changePassword(ChangePasswordRequest request);
 }
