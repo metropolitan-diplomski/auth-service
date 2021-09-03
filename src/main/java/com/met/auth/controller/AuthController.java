@@ -37,17 +37,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> createAuthenticationToken(
-            @RequestBody JwtAuthenticationDto jwtAuthenticationDto)
-            throws Exception {
+            @RequestBody JwtAuthenticationDto jwtAuthenticationDto) {
 
-        // Checking username|email and password
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                jwtAuthenticationDto.getUsername(), jwtAuthenticationDto.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        jwtAuthenticationDto.getUsername(),
+                        jwtAuthenticationDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         JwtUser user = (JwtUser) authentication.getPrincipal();
 
-        JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(jwtAuthenticationDto.getUsername());
+        JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(
+                jwtAuthenticationDto.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails, user.getDbUser().getId().toString());
 
         Date expiration = jwtTokenUtil.getExpirationDateFromToken(token);
@@ -58,10 +59,12 @@ public class AuthController {
             roles.add(authority.getAuthority());
         }
 
-        return ResponseEntity.ok(new JwtResponse(token, dateFormat.format(expiration), userDetails.getUsername(), roles,
+        return ResponseEntity.ok(
+                new JwtResponse(token, dateFormat.format(expiration), userDetails.getUsername(), roles,
                 userDetails.getDbUser().getId().toString(), userDetails.getDbUser().getFullName(),
                 userDetails.getDbUser().getAddress()));
 
     }
+
 
 }

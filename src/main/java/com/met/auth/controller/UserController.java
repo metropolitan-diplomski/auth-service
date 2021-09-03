@@ -33,7 +33,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestParam(name = "clients") boolean clients, @Valid @RequestBody UserCreateRequest request) throws AuthServiceException {
+    public ResponseEntity<UserResponse> createUser(
+            @RequestParam(name = "clients") boolean clients,
+            @Valid @RequestBody UserCreateRequest request) throws AuthServiceException {
         return ResponseEntity.ok(userService.createUser(request, clients));
     }
 
