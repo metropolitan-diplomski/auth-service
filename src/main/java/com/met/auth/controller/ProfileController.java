@@ -27,4 +27,9 @@ public class ProfileController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable(name = "id") String id) {
+        return ResponseEntity.ok(userService.getById(id));
+    }
 }
